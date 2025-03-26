@@ -1,0 +1,163 @@
+[
+    {
+        "test_case": 1,
+        "num_players": 2,
+        "hole_cards": [
+            [
+                "QC",
+                "7D"
+            ],
+            [
+                "KS",
+                "9D"
+            ]
+        ],
+        "community_cards": [],
+        "expected_win_rates": {
+            "Player 1": 35.0,
+            "Player 2": 65.0
+        },
+        "calculated_win_rates": {
+            "Player 1": 34.46,
+            "Player 2": 65.54
+        },
+        "differences": {
+            "Player 1": 0.5399999999999991,
+            "Player 2": 0.5400000000000063
+        },
+        "execution_time": 2.705984592437744,
+        "passed": true
+    },
+    {
+        "test_case": 2,
+        "num_players": 2,
+        "hole_cards": [
+            [
+                "QC",
+                "7D"
+            ],
+            [
+                "KS",
+                "9D"
+            ]
+        ],
+        "community_cards": [
+            "JS",
+            "AC",
+            "5C"
+        ],
+        "expected_win_rates": {
+            "Player 1": 26.0,
+            "Player 2": 73.0
+        },
+        "calculated_win_rates": {
+            "Player 1": 26.16,
+            "Player 2": 73.84
+        },
+        "differences": {
+            "Player 1": 0.16000000000000014,
+            "Player 2": 0.8400000000000034
+        },
+        "execution_time": 0.07700562477111816,
+        "passed": true
+    },
+    {
+        "test_case": 3,
+        "num_players": 2,
+        "hole_cards": [
+            [
+                "QC",
+                "7D"
+            ],
+            [
+                "KS",
+                "9D"
+            ]
+        ],
+        "community_cards": [
+            "JS",
+            "AC",
+            "5C",
+            "QH"
+        ],
+        "expected_win_rates": {
+            "Player 1": 84.0,
+            "Player 2": 16.0
+        },
+        "calculated_win_rates": {
+            "Player 1": 84.09,
+            "Player 2": 15.91
+        },
+        "differences": {
+            "Player 1": 0.09000000000000341,
+            "Player 2": 0.08999999999999986
+        },
+        "execution_time": 0.003996372222900391,
+        "passed": true
+    },
+    {
+        "test_case": 4,
+        "num_players": 2,
+        "hole_cards": [
+            [
+                "QD",
+                "JS"
+            ],
+            [
+                "TH",
+                "8C"
+            ]
+        ],
+        "community_cards": [],
+        "expected_win_rates": {
+            "Player 1": 66.5,
+            "Player 2": 33.5
+        },
+        "calculated_win_rates": {
+            "Player 1": 66.74,
+            "Player 2": 33.26
+        },
+        "differences": {
+            "Player 1": 0.23999999999999488,
+            "Player 2": 0.240000000000002
+        },
+        "execution_time": 2.73721981048584,
+        "passed": true
+    },
+    {
+        "test_case": 5,
+        "num_players": 3,
+        "hole_cards": [
+            [
+                "AH",
+                "QH"
+            ],
+            [
+                "AS",
+                "TS"
+            ],
+            [
+                "9S",
+                "9H"
+            ]
+        ],
+        "community_cards": [],
+        "expected_win_rates": {
+            "Player 1": 34.0,
+            "Player 2": 24.0,
+            "Player 3": 42.0
+        },
+        "calculated_win_rates": {
+            "Player 1": 36.25,
+            "Player 2": 22.04,
+            "Player 3": 41.7
+        },
+        "differences": {
+            "Player 1": 2.25,
+            "Player 2": 1.9600000000000009,
+            "Player 3": 0.29999999999999716
+        },
+        "execution_time": 3.0032477378845215,
+        "passed": false
+    }
+]

@@ -1,0 +1,48 @@
+[
+    {
+        "num_players": 2,
+        "hole_cards": [["QC", "7D"], ["KS", "9D"]],
+        "community_cards": [],
+        "collected_win_rates": {
+            "Player 1": 35.00,
+            "Player 2": 65.00
+        }
+    },
+    {
+        "num_players": 2,
+        "hole_cards": [["QC", "7D"], ["KS", "9D"]],
+        "community_cards": ["JS", "AC", "5C"],
+        "collected_win_rates": {    
+            "Player 1": 26.00,
+            "Player 2": 73.00
+        }
+    },
+    {
+        "num_players": 2,
+        "hole_cards": [["QC", "7D"], ["KS", "9D"]],
+        "community_cards": ["JS", "AC", "5C", "QH"],
+        "collected_win_rates": {    
+            "Player 1": 84.00,
+            "Player 2": 16.00
+        }
+    },
+    {
+        "num_players": 2,
+        "hole_cards": [["QD", "JS"], ["TH", "8C"]],
+        "community_cards": [],
+        "collected_win_rates": {    
+            "Player 1": 66.50,
+            "Player 2": 33.50
+        }
+    },
+    {
+        "num_players": 3,
+        "hole_cards": [["AH", "QH"], ["AS", "TS"], ["9S", "9H"]],
+        "community_cards": [],
+        "collected_win_rates": {    
+            "Player 1": 34.00,
+            "Player 2": 24.00,
+            "Player 3": 42.00
+        }
+    }
+]
