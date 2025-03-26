@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  poker-calculator:
+    build: .
+    container_name: texas-holdem-calculator
+    volumes:
+      - ./data:/app/data  # Mount data volume to persist test results
+    command: --test  # Default command to run tests
+    # Add GPU support if available
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+              count: all  # Use all available GPUs
+
+  # Interactive shell for running custom calculations
+  poker-interactive:
+    build: .
+    container_name: texas-holdem-interactive
+    volumes:
+      - ./data:/app/data
+    stdin_open: true  # Keep STDIN open
+    tty: true  # Allocate a pseudo-TTY
+    entrypoint: /bin/bash  # Override entrypoint for interactive shell 

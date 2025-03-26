@@ -1,18 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Docker
+.env
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
 # Common GitHub repository ignores
 *.log
 *.tmp
-*.swp
-*.swo
 *.bak
 *.orig
 *.rej
 *.sublime-project
 *.sublime-workspace
-*.DS_Store
-*.idea/
-*.vscode/
 node_modules/
-dist/
-build/
-.env
 .cursor
