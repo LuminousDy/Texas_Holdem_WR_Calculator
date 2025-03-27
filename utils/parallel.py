@@ -68,18 +68,12 @@ def parallel_execute(func, args_list, num_workers=None):
     
     return results
 
-# Try to use GPU acceleration if available
-try:
-    import numba
-    has_gpu = numba.cuda.is_available()
-except (ImportError, AttributeError):
-    has_gpu = False
-
 def get_computation_device():
     """
-    Check if GPU acceleration is available.
+    Get information about the CPU for computation.
     
     Returns:
-        str: 'gpu' if available, otherwise 'cpu'
+        str: Information about CPU cores
     """
-    return 'gpu' if has_gpu else 'cpu'
+    cpu_count = multiprocessing.cpu_count()
+    return f'cpu ({cpu_count} cores)'

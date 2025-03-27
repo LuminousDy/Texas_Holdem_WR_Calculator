@@ -61,26 +61,45 @@ def exact_enumeration(num_players, hole_cards, community_cards):
     # Calculate how many more cards need to be drawn
     remaining_to_draw = 5 - len(community_cards)
     
+    # Track number of simulations for progress reporting
+    simulation_count = 0
+    total_simulations = 1  # Will be updated if more cards need to be drawn
+    
     # If we already have 5 community cards, just evaluate once
     if remaining_to_draw == 0:
         winners = compare_hands(hole_cards, community_cards)
+        
+        # Handle tie situations - distribute win equity among tied players
+        win_value = 1.0 / len(winners)
         for winner in winners:
-            wins[winner] += 1
+            wins[winner] += win_value
+            
         total_hands = 1
     else:
         # Enumerate all possible remaining card combinations
         possible_draws = enumerate_remaining_cards(all_cards, remaining_to_draw)
         total_hands = len(possible_draws)
+        total_simulations = total_hands
+        
+        # Start timer
+        start_time = time.time()
         
         # Evaluate each possible board
         for draw in possible_draws:
             complete_board = community_cards + list(draw)
             winners = compare_hands(hole_cards, complete_board)
             
-            # Split the win among tied players
+            # Handle tie situations - distribute win equity among tied players
             win_value = 1.0 / len(winners)
             for winner in winners:
                 wins[winner] += win_value
+                
+            # Update progress counter
+            simulation_count += 1
+            if simulation_count % 1000 == 0:
+                progress = simulation_count / total_simulations * 100
+                elapsed = time.time() - start_time
+                #print(f"Progress: {progress:.1f}% ({simulation_count}/{total_simulations}), Time: {elapsed:.2f}s")
     
     # Calculate win percentages
     results = {}

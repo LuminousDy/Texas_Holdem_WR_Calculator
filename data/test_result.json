@@ -18,14 +18,14 @@
             "Player 2": 65.0
         },
         "calculated_win_rates": {
-            "Player 1": 34.47,
-            "Player 2": 65.53
+            "Player 1": 34.69,
+            "Player 2": 65.31
         },
         "differences": {
-            "Player 1": 0.5300000000000011,
-            "Player 2": 0.5300000000000011
+            "Player 1": 0.3100000000000023,
+            "Player 2": 0.3100000000000023
         },
-        "execution_time": 0.8672211170196533,
+        "execution_time": 3.802910804748535,
         "passed": true
     },
     {
@@ -58,7 +58,7 @@
             "Player 1": 0.16000000000000014,
             "Player 2": 0.8400000000000034
         },
-        "execution_time": 0.0907135009765625,
+        "execution_time": 0.08770465850830078,
         "passed": true
     },
     {
@@ -92,7 +92,7 @@
             "Player 1": 0.09000000000000341,
             "Player 2": 0.08999999999999986
         },
-        "execution_time": 0.004569530487060547,
+        "execution_time": 0.003999471664428711,
         "passed": true
     },
     {
@@ -114,14 +114,14 @@
             "Player 2": 33.5
         },
         "calculated_win_rates": {
-            "Player 1": 66.58,
-            "Player 2": 33.42
+            "Player 1": 66.77,
+            "Player 2": 33.23
         },
         "differences": {
-            "Player 1": 0.0799999999999983,
-            "Player 2": 0.0799999999999983
+            "Player 1": 0.269999999999996,
+            "Player 2": 0.2700000000000031
         },
-        "execution_time": 0.867511510848999,
+        "execution_time": 3.496356964111328,
         "passed": true
     },
     {
@@ -143,21 +143,99 @@
         ],
         "community_cards": [],
         "expected_win_rates": {
-            "Player 1": 34.0,
-            "Player 2": 24.0,
+            "Player 1": 36.0,
+            "Player 2": 22.0,
             "Player 3": 42.0
         },
         "calculated_win_rates": {
-            "Player 1": 36.12,
-            "Player 2": 21.92,
-            "Player 3": 41.96
+            "Player 1": 36.26,
+            "Player 2": 21.95,
+            "Player 3": 41.79
         },
         "differences": {
-            "Player 1": 2.1199999999999974,
-            "Player 2": 2.0799999999999983,
-            "Player 3": 0.03999999999999915
+            "Player 1": 0.259999999999998,
+            "Player 2": 0.05000000000000071,
+            "Player 3": 0.21000000000000085
         },
-        "execution_time": 1.2052788734436035,
+        "execution_time": 4.839510679244995,
+        "passed": true
+    },
+    {
+        "test_case": 6,
+        "num_players": 9,
+        "hole_cards": [
+            [
+                "TS",
+                "TH"
+            ],
+            [
+                "9S",
+                "9H"
+            ],
+            [
+                "8S",
+                "8H"
+            ],
+            [
+                "7S",
+                "7H"
+            ],
+            [
+                "6S",
+                "6H"
+            ],
+            [
+                "5S",
+                "5H"
+            ],
+            [
+                "4S",
+                "4H"
+            ],
+            [
+                "3S",
+                "3H"
+            ],
+            [
+                "2S",
+                "2H"
+            ]
+        ],
+        "community_cards": [],
+        "expected_win_rates": {
+            "Player 1": 25.0,
+            "Player 2": 20.0,
+            "Player 3": 16.0,
+            "Player 4": 12.0,
+            "Player 5": 9.0,
+            "Player 6": 7.0,
+            "Player 7": 5.0,
+            "Player 8": 3.0,
+            "Player 9": 2.0
+        },
+        "calculated_win_rates": {
+            "Player 1": 28.82,
+            "Player 2": 18.1,
+            "Player 3": 15.55,
+            "Player 4": 11.69,
+            "Player 5": 8.66,
+            "Player 6": 6.58,
+            "Player 7": 4.4,
+            "Player 8": 3.48,
+            "Player 9": 2.72
+        },
+        "differences": {
+            "Player 1": 3.8200000000000003,
+            "Player 2": 1.8999999999999986,
+            "Player 3": 0.4499999999999993,
+            "Player 4": 0.3100000000000005,
+            "Player 5": 0.33999999999999986,
+            "Player 6": 0.41999999999999993,
+            "Player 7": 0.5999999999999996,
+            "Player 8": 0.48,
+            "Player 9": 0.7200000000000002
+        },
+        "execution_time": 4.0920960903167725,
         "passed": false
     }
 ]

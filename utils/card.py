@@ -72,3 +72,26 @@ def deal_random_cards(used_cards, num_cards):
         raise ValueError(f"Not enough cards left in deck to deal {num_cards} cards")
     
     return random.sample(deck, num_cards)
+
+def get_mirrored_cards(cards):
+    """
+    Generate mirrored cards by swapping suits in a systematic way.
+    This is used for variance reduction in Monte Carlo simulations through antithetic variates.
+    
+    Args:
+        cards (list): List of card strings to mirror
+        
+    Returns:
+        list: Mirrored versions of the input cards
+    """
+    # Map for suit mirroring: Spades<->Hearts, Diamonds<->Clubs
+    suit_mirror = {'S': 'H', 'H': 'S', 'D': 'C', 'C': 'D'}
+    
+    mirrored_cards = []
+    for card in cards:
+        rank = card[0]
+        suit = card[1]
+        mirrored_suit = suit_mirror[suit]
+        mirrored_cards.append(rank + mirrored_suit)
+    
+    return mirrored_cards

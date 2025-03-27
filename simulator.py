@@ -1,10 +1,12 @@
 import random
-from utils.card import deal_random_cards
+from utils.card import deal_random_cards, get_mirrored_cards
 from evaluator import compare_hands
 from utils.parallel import parallel_execute, get_computation_device
 import multiprocessing
+import time
+import numpy as np
 
-def run_simulation_batch(batch_size, num_players, hole_cards, community_cards, all_cards):
+def run_simulation_batch(batch_size, num_players, hole_cards, community_cards, all_cards, use_antithetic=True):
     """
     Run a batch of simulations for parallel processing.
     
@@ -14,6 +16,7 @@ def run_simulation_batch(batch_size, num_players, hole_cards, community_cards, a
         hole_cards (list): List of hole card pairs for each player
         community_cards (list): List of community cards
         all_cards (list): All known cards for deck exclusion
+        use_antithetic (bool): Whether to use antithetic variates for variance reduction
         
     Returns:
         tuple: (wins, ties) counts for each player
@@ -36,10 +39,54 @@ def run_simulation_batch(batch_size, num_players, hole_cards, community_cards, a
         if len(winners) == 1:
             wins[winners[0]] += 1
         else:
+            # Distribute win equally among tied players
+            win_value = 1.0 / len(winners) 
             for winner in winners:
-                ties[winner] += 1
+                ties[winner] += win_value
+                
+        # If using antithetic variates, run a mirrored simulation
+        if use_antithetic and remaining_cards > 0:
+            # Get mirrored community cards for variance reduction
+            mirrored_board = community_cards + get_mirrored_cards(simulated_board[len(community_cards):])
+            
+            # Compare hands with mirrored board
+            mirrored_winners = compare_hands(hole_cards, mirrored_board)
+            
+            # Update counters for mirrored simulation
+            if len(mirrored_winners) == 1:
+                wins[mirrored_winners[0]] += 1
+            else:
+                # Distribute win equally among tied players
+                win_value = 1.0 / len(mirrored_winners)
+                for winner in mirrored_winners:
+                    ties[winner] += win_value
     
     return (wins, ties)
+
+def check_convergence(win_rates, history, threshold=0.1):
+    """
+    Check if win rates have converged within threshold.
+    
+    Args:
+        win_rates (list): Current win rates for each player
+        history (list): History of win rates
+        threshold (float): Convergence threshold
+        
+    Returns:
+        bool: True if converged, False otherwise
+    """
+    if len(history) < 3:  # Need at least 3 checkpoints to assess convergence
+        return False
+        
+    # Calculate average change over last 3 checkpoints
+    diffs = []
+    for i in range(1, min(4, len(history))):
+        prev_rates = history[-i]
+        max_diff = max(abs(r1 - r2) for r1, r2 in zip(win_rates, prev_rates))
+        diffs.append(max_diff)
+    
+    avg_diff = sum(diffs) / len(diffs)
+    return avg_diff < threshold
 
 def monte_carlo_simulation(num_players, hole_cards, community_cards=None, iterations=10000):
     """
@@ -78,15 +125,17 @@ def monte_carlo_simulation(num_players, hole_cards, community_cards=None, iterat
     else:
         iterations = max(iterations, 80000)
     
-    # Check for GPU acceleration
-    device = get_computation_device()
-    if device == 'gpu':
-        print("Using GPU acceleration for Monte Carlo simulation")
-        # TODO: Implement GPU acceleration if available
-        # For now, fall back to CPU parallelization
+    # Get maximum available CPU cores
+    num_cores = multiprocessing.cpu_count()
+    
+    # Use antithetic variates for variance reduction
+    use_antithetic = True
+    
+    # If using antithetic variates, we can reduce the number of iterations
+    if use_antithetic:
+        iterations = int(iterations * 0.6)  # Each iteration produces 2 samples
     
     # Set up parallel execution
-    num_cores = multiprocessing.cpu_count()
     batch_size = iterations // num_cores
     remaining = iterations % num_cores
     
@@ -95,30 +144,81 @@ def monte_carlo_simulation(num_players, hole_cards, community_cards=None, iterat
     for i in range(num_cores):
         # Add one extra iteration to the first 'remaining' batches
         current_batch_size = batch_size + (1 if i < remaining else 0)
-        batch_args.append((current_batch_size, num_players, hole_cards, community_cards, all_cards))
+        batch_args.append((current_batch_size, num_players, hole_cards, community_cards, all_cards, use_antithetic))
     
-    # Run batches in parallel
-    batch_results = parallel_execute(run_simulation_batch, batch_args)
+    # For early termination based on convergence
+    win_rate_history = []
+    convergence_reached = False
+    convergence_checks = 10  # Number of checkpoints to check convergence
+    iterations_per_check = max(iterations // convergence_checks, 1000)
     
-    # Combine results
+    # Track simulations completed
+    simulations_completed = 0
+    
+    # Process simulation batches in chunks with convergence checks
     total_wins = [0] * num_players
     total_ties = [0] * num_players
     
-    for wins, ties in batch_results:
-        for i in range(num_players):
-            total_wins[i] += wins[i]
-            total_ties[i] += ties[i]
+    # Start timer
+    start_time = time.time()
     
-    # Calculate win percentages
+    # Break iterations into chunks for convergence checks
+    while simulations_completed < iterations and not convergence_reached:
+        # Calculate remaining simulations
+        remaining_sims = iterations - simulations_completed
+        chunk_size = min(iterations_per_check, remaining_sims)
+        
+        # Setup batch arguments for this chunk
+        chunk_batch_size = chunk_size // num_cores
+        chunk_remaining = chunk_size % num_cores
+        
+        chunk_batch_args = []
+        for i in range(num_cores):
+            # Add one extra iteration to the first 'chunk_remaining' batches
+            current_batch_size = chunk_batch_size + (1 if i < chunk_remaining else 0)
+            chunk_batch_args.append((current_batch_size, num_players, hole_cards, community_cards, all_cards, use_antithetic))
+        
+        # Run batches in parallel
+        batch_results = parallel_execute(run_simulation_batch, chunk_batch_args)
+        
+        # Combine results
+        for wins, ties in batch_results:
+            for i in range(num_players):
+                total_wins[i] += wins[i]
+                total_ties[i] += ties[i]
+        
+        # Update simulations completed
+        simulations_completed += chunk_size * (2 if use_antithetic else 1)
+        
+        # Calculate current win rates
+        current_win_rates = []
+        for i in range(num_players):
+            # Calculate win percentage
+            total_simulations = simulations_completed
+            win_percentage = (total_wins[i] + total_ties[i]) / total_simulations * 100
+            current_win_rates.append(win_percentage)
+        
+        # Check for convergence
+        win_rate_history.append(current_win_rates)
+        if simulations_completed >= iterations // 3:  # Only check after 1/3 of simulations
+            convergence_reached = check_convergence(current_win_rates, win_rate_history)
+        
+        # Print progress
+        elapsed = time.time() - start_time
+        progress = simulations_completed / iterations * 100
+        #print(f"Progress: {progress:.1f}% ({simulations_completed}/{iterations}), Time: {elapsed:.2f}s")
+    
+    # Calculate final win percentages
     results = {}
+    total_simulations = simulations_completed
+    
     for i in range(num_players):
-        # Calculate win percentage, handling potential division by zero
-        if total_ties[i] > 0:
-            tie_contribution = total_ties[i] / sum(1 for t in total_ties if t > 0)
-        else:
-            tie_contribution = 0
-            
-        win_percentage = (total_wins[i] + tie_contribution) / iterations * 100
+        win_percentage = (total_wins[i] + total_ties[i]) / total_simulations * 100
         results[f"Player {i+1}"] = round(win_percentage, 2)
+    
+    # Print early termination info if applicable
+    if convergence_reached:
+        #print(f"Early termination at {simulations_completed} simulations due to convergence.")
+        pass
     
     return results

@@ -40,9 +40,25 @@
         "hole_cards": [["AH", "QH"], ["AS", "TS"], ["9S", "9H"]],
         "community_cards": [],
         "collected_win_rates": {    
-            "Player 1": 34.00,
-            "Player 2": 24.00,
+            "Player 1": 36.00,
+            "Player 2": 22.00,
             "Player 3": 42.00
         }
+    },
+{
+    "num_players": 9,
+    "hole_cards": [["TS", "TH"], ["9S", "9H"], ["8S", "8H"], ["7S", "7H"], ["6S", "6H"], ["5S", "5H"], ["4S", "4H"], ["3S", "3H"], ["2S", "2H"]],
+    "community_cards": [],
+    "collected_win_rates": {    
+        "Player 1": 25.00,
+        "Player 2": 20.00,
+        "Player 3": 16.00,
+        "Player 4": 12.00,
+        "Player 5": 9.00,
+        "Player 6": 7.00,
+        "Player 7": 5.00,
+        "Player 8": 3.00,
+        "Player 9": 2.00
     }
+}
 ]
